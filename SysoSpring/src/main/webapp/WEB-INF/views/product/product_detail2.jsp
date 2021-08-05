@@ -1,0 +1,858 @@
+<%@page import="java.util.Date"%>
+<%@page import="org.springframework.ui.Model"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+
+<title>시소마켓 | 상품상세</title>
+<!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+   <![endif]-->
+
+<link href="resources/css/common.css" rel="stylesheet" type="text/css">
+<link href="resources/css/header.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="resources/css/product.css">
+
+
+
+
+<script src="resources/js/jquery-3.1.1.min.js"></script>
+<script src="resources/js/toggle.js"></script>
+<style>
+#popup {
+    display: none; /*숨기기*/
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    left:0;
+    top:0;
+    z-index:999999999;
+}
+
+#popmenu {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    width: 600px;
+    height: 500px;
+    padding:60px;
+    text-align: center;
+    background: #fff;
+    border-radius: 20px;
+      box-shadow: 0 2px 8px rgb(0 0 0 / 20%), 0 8px 20px rgb(0 0 0 / 20%);
+    
+}
+
+.pop_cont{
+	display: flex;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+.pop_title{
+letter-spacing: 5.2px;
+    font-size: 26px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #396afc;
+    margin-bottom: 30px;
+}
+
+.pop_cont button{
+	background: none;
+	outline: none;
+	border:none;
+}
+#popmenu .textarea textarea{
+	width:100%;
+	height: 300px;
+	resize: none;
+	font-sizle:20px;
+}
+#popmenu .textarea{
+margin-bottom: 20px;
+}
+placeholder::{
+	font-size:20px;
+}
+
+#popmenu .report_btn{
+	background:#396afc;
+	border:none;
+	padding:10px 20px;
+	color:#fff;
+	cursor: pointer;
+	font-weight: bold;
+	
+}
+
+
+
+</style>
+
+<script type="text/javascript">
+$(function(){
+	   
+
+	$("#report").click(function(){
+	    $("#popup").fadeIn();
+	});
+	$(".exit").click(function(){
+	    $("#popup").fadeOut();
+	});   
+	});
+
+	$(document).ready(function () {
+	   
+	      
+	      
+	      var member_id = '<%=(String) session.getAttribute("id")%>';
+	         var item_idx = '<%=(String) request.getParameter("item_idx")%>';
+	      var isLike = '${isLike}';
+	      
+	      if(isLike == 'like'){
+	         console.log('검정배경')
+	         $('.btn1').css('background', 'black');
+	      }
+	      
+	      console.log('아이디 : ' + member_id);
+	      console.log('isLike - ' + isLike);
+	      
+	      $('.btn1').click(function(){
+	         
+	         if(member_id == "null") {
+	            alert("로그인 후 사용가능한 기능입니다!"); 
+	            
+	         } else  {
+	            
+	            if(isLike == "notLike") {
+	               isLike = 'like';
+	               jQuery('#likesImg').attr("src", "resources/images/redheart.svg");
+	               $.ajax({
+	                  url: "item/changeToRed",
+	                  type: "POST",
+	                  data: {"item_idx": item_idx, "member_id": member_id},
+	                  success: function(rdata){
+	                     console.log('받아온 likesCount 값' + rdata);
+	                     $('#likesCount1').html(' ' + rdata + ' ');
+	                     $('#likesCount2').html(' ' + rdata + ' ');
+	                     $('.btn1').css('background', 'black');
+	                    jQuery('#likesimg').attr("src","resources/images/redheart.svg");
+	                  }
+	               });
+	            } else {
+	               isLike = 'notLike';
+	               jQuery('#likesImg').attr("src", "resources/images/whiteheart.svg");
+	               $.ajax({
+	                  url: "item/changeToGray",
+	                  type: "POST",
+	                  data: {"item_idx": item_idx, "member_id": member_id},
+	                  success: function(rdata){
+	                    console.log('받아온 likesCount 값' + rdata);
+	                     $('#likesCount1').html(' ' + rdata + ' ');
+	                     $('#likesCount2').html(' ' + rdata + ' ');
+	                     $('.btn1').css('background', '#CCCCCC');
+	                     jQuery('#likesimg').attr("src","resources/images/whiteheart.svg");
+	                  }
+	               });
+	            }
+	         }
+	      });
+	      
+	      // 댓글등록
+	      // member_id => 세션에서 가져온 id
+	      // textarea 내용 받아와 지는지 확인
+	      
+	       $('#commentForm').submit(function(event){
+	          // 확인
+//	           event.preventDefault(); // 자동 submit 막음
+	          // 전송 여부 boolean 값 
+	          // 초기값은 false로 셋팅을 한다. 
+	          var isSubmit = false;
+
+	          var replyVal = jQuery('textarea#reply').val();
+	          console.log(replyVal);
+	          console.log(jQuery('textarea#reply').val());
+//	           alert('동작함');
+	          
+	          if(member_id == "null") {
+	               alert("로그인 후 사용가능한 기능입니다!"); 
+	               return false;
+	          }
+	          
+	          if(replyVal == ""){
+	             alert('내용을 입력해주세요!');
+	             return false;
+	          }
+	          
+	            $.ajax({
+	                  url: "item/insertComment",
+	                  type: "POST",
+	                  dataType: 'json',
+	                  contentType : 'application/json',
+	                  data: JSON.stringify({
+	                     "item_idx": item_idx, "member_id": member_id, "comment_content":replyVal
+	               }),
+	                  success: function(rdata){
+	                     var str = "";
+	                     
+	                     if(rdata != ""){
+	                        $(rdata).each(function(){
+	                        console.log(this)
+	                        str += "<div class=" + 'replyArea' + ">"
+	                        + "<a href=" + "''" + ">" + "<img src=" + "'resources/images/symbol.svg'" + "width=" + "'48'" +  "height=" + "'48'" + ">" + "</a>"
+	                        + "<div class=" + "'replyText'" + ">"
+	                        + "<div class=" + "'set'" + ">"
+	                        + "<div class=" + "'txt1'" + ">" + this.member_nickname + "</div>"
+	                        + "<div class=" + "'txt1-2'" + ">" + "방금전" + "</div>"
+	                        + "</div>"
+	                        + "<div class=" + "'txt2'" + ">" + this.comment_content + "</div>"
+	                        + "<div class=" + "'txt3'" + ">"
+	                        + "<div class=" + "'report'" + ">"
+	                        + "<img src=" + "'resources/images/siren.svg'" + "width=" + "'14'" + "height=" + "'14'" + ">"
+	                        + "<span class=" + "'report_txt'" + ">" + "신고하기" + "</span>"
+	                        + "</div>"
+	                        + "<div class=" + "'report'" + "id=" + "'delComment'" + ">"
+	                        + "<img src=" + "'resources/images/trash-can.svg'" + "width=" + "'14'" + "height=" + "'14'" + ">"
+	                        + "<span class=" + "'report_txt'" + ">" + "삭제하기" + "</span>"
+	                        + "</div>"
+	                        + "</div>"
+	                        + "</div>"
+	                        + "</div>"
+	                        });
+	                        $(".replyContent").prepend(str);
+	                        
+	                        
+	                     }
+	                     
+	                  }
+	               });
+	          return false;
+	       });
+
+	   });
+	   
+	   
+	   
+	   		
+	   function deleteComment(comment_idx){
+		   $(document).ready(function () {
+			   
+	    	var member_id = '<%=(String)session.getAttribute("id")%>';
+			
+		   
+//   			var comment_idx = $('#comment_idx').val();
+  			var cMember_id = $('#cMember_id').val();
+		    alert(comment_idx);
+  			alert(cMember_id);
+  			if(member_id == "null"){
+  				alert('로그인 후 사용가능한 기능입니다.');
+  				return false;
+  			}
+  			
+  			if(member_id != cMember_id){
+  				alert('본인이 작성한 댓글이 아닙니다.');
+  				return false;
+  			} else if(member_id == cMember_id){
+  				
+  				alert('본인이 작성한 댓글입니다.');
+  			
+  			$.ajax({
+	               url: "item/deleteComment",
+	               type: "POST",
+	               dataType: 'json',
+	               contentType : 'application/json',
+	               data: JSON.stringify({
+	            	   "item_idx": item_idx, "member_id": member_id, "comment_idx":comment_idx
+					}),
+	               success: function(rdata){
+	            	   alert('삭제 성공');
+	            	   var str = "";
+	            	   
+	            	   if(rdata != ""){
+	            		   $(rdata).each(function(){
+	            		   console.log(this);
+	            		   str += "<div class=" + 'replyArea' + ">"
+	            		   + "<a href=" + "''" + ">" + "<img src=" + "'resources/images/symbol.svg'" + "width=" + "'48'" +  "height=" + "'48'" + ">" + "</a>"
+	            		   + "<div class=" + "'replyText'" + ">"
+	            		   + "<div class=" + "'set'" + ">"
+	            		   + "<div class=" + "'txt1'" + ">" + this.member_nickname + "</div>"
+	            		   + "<div class=" + "'txt1-2'" + ">" + "방금전" + "</div>"
+	            		   + "</div>"
+	            		   + "<div class=" + "'txt2'" + ">" + this.comment_content + "</div>"
+	            		   + "<div class=" + "'txt3'" + ">"
+	            		   + "<div class=" + "'report'" + ">"
+	            		   + "<img src=" + "'resources/images/siren.svg'" + "width=" + "'14'" + "height=" + "'14'" + ">"
+	            		   + "<span class=" + "'report_txt'" + ">" + "신고하기" + "</span>"
+	            		   + "</div>";
+	            		   if(member_id == this.member_id){
+	            			   str += "<div class=" + "'report'" + "id=" + "'delComment'" + ">"
+		            		   + "<img src=" + "'resources/images/trash-can.svg'" + "width=" + "'14'" + "height=" + "'14'" + ">"
+		            		   + "<span class=" + "'report_txt'" + ">" + "삭제하기" + "</span>"
+		            		   + "</div>";
+	            		   }
+	            		   str += "</div>"
+	            		   + "</div>"
+	            		   + "</div>"
+// 	            		   + "<div class=" + "'report'" + "id=" + "'delComment'" + ">"
+// 	            		   + "<img src=" + "'resources/images/trash-can.svg'" + "width=" + "'14'" + "height=" + "'14'" + ">"
+// 	            		   + "<span class=" + "'report_txt'" + ">" + "삭제하기" + "</span>"
+// 	            		   + "</div>"
+// 	            		   + "</div>"
+// 	            		   + "</div>"
+// 	            		   + "</div>"
+	            		   });
+	            		   $(".replyContent").html(str);
+	            		   // --------------------------
+	            		   
+	            		   // --------------------------
+	            		   
+	            	   }else{
+	            		   // Data 가 없으면
+	            		   $(".replyContent").html("");
+	            	   }
+	            	   
+	               }
+  			
+	            }); // ajax
+  			}
+  			
+		}); //jquery
+		   
+   
+		   
+		});
+
+
+
+
+</script>
+
+</head>
+
+<body>
+
+	<div class="bar">
+		<ul>
+			<li id="btn"><img src="resources/images/alarm.svg">
+
+				<ul id="layer">
+					<li><a href="#">""님이 구매하셨습니다</a></li>
+					<li><a href="#">""님이 구매하셨습니다</a></li>
+					<li><a href="#">""님이 구매하셨습니다</a></li>
+				</ul></li>
+
+			<li><a href="#"><img src="resources/images/redheart.svg"></a></li>
+
+
+			<li><a href="#">TOP</a></li>
+		</ul>
+	</div>
+	<header id="header">
+		<nav id="nav">
+			<div id="wrap">
+				<div class="login">
+
+					<ul>
+						<li><a href="#" class="sig-color">로그인</a></li>
+						<li><a href="#" class="sig-color">회원가입</a></li>
+					</ul>
+
+
+				</div>
+				<h1 id="logo">
+					<a href="home"><img src="resources/images/main_logo.svg"></a>
+				</h1>
+
+				<div class="search_wrap">
+					<div class="search_area">
+						<input type="text" class="search" placeholder="상품명,지역명,@상점명 입력">
+						<a href="#" class="search_img"><img
+							src="resources/images/home_search.svg"></a>
+					</div>
+
+
+				</div>
+				<div class="nav_right">
+					<ul>
+						<li><a href="write_form.html"><img
+								src="resources/images/money.svg"> 판매하기 </a></li>
+						<li><img src="resources/images/shop.svg">내상점</li>
+
+						<li><img src="resources/images/talk.svg">시소톡</li>
+
+						<li id="btn2"><img src="resources/images/hamburg.svg">카테고리
+
+							<ul id="layer2">
+								<li class="strong"><a href="#">전체 카테고리</a></li>
+
+
+								<li><a href="#">여성의류</a></li>
+								<li><a href="#">패션잡화</a></li>
+								<li><a href="#">남성의류</a></li>
+								<li><a href="#">디지털/가전</a></li>
+								<li><a href="#">도서/티켓/취미/반려</a></li>
+								<li><a href="#">스타굿즈</a></li>
+								<li><a href="#">생활/문구/가구/식품</a></li>
+								<li><a href="#">스포츠/레저</a></li>
+								<li><a href="#">뷰티/미용</a></li>
+								<li><a href="#">유아동/출산</a></li>
+								<li><a href="#">차량/오토바이</a></li>
+								<li><a href="#">기타</a></li>
+
+							</ul></li>
+
+					</ul>
+				</div>
+
+			</div>
+
+		</nav>
+
+
+	</header>
+	
+
+	
+
+	<section id="sec1">
+		<div id="wrap">
+		<c:forEach items="${list}" var="list">
+			<article class="product_info">
+				<div class="img_area">
+					<img src="resources/itemUpload/${list.item_img}.JPG" width="430" height="430">
+
+				</div>
+
+			</article>
+
+
+			<article class="product_detail">
+				<div class="txt_area">
+				
+					<h2 class="title">${list.item_subject}</h2>
+					<h1 class="price">${list.item_price} 원</h1>
+					
+
+				</div>
+
+				<ul class="db_area">
+					<li><img src="resources/images/grayheart.svg"><span
+						class="small" id="likesCount1"> ${likesCount} </span></li>
+					<li><img src="resources/images/eye.svg"><span class="small"> ${list.item_readcount}</span></li>
+					<li><img src="resources/images/clock.svg"><span class="small"> ${list.item_date_format} </span></li>
+					<li id="report"><a href="#"><img src="resources/images/siren.svg"><span
+							class="small">신고하기</span>
+					</a></li>
+				</ul>
+				
+					<div id="popup">
+       <div id="popmenu">
+       <div class="pop_cont">
+           <div class="pop_title">신고하기</div>
+           <button class="exit" style="cursor: pointer;"><img src="resources/images/exit.svg" width="24" height="24"></button>
+       </div>
+       <form action="">
+       <div class="textarea">
+       <textarea placeholder="신고 내용을 직접 작성해주세요.자세하게 적어주시면 신고처리에 큰 도움이 됩니다." required></textarea>
+       </div>
+       
+       <button type="submit" class="report_btn">등록</button>
+       </form>
+       </div>
+   </div>
+				
+				
+				<div class="status_area">
+					<ul class="status">
+						<li>· 상품상태</li>
+						<li>· 교환여부</li>
+						<li style="margin-bottom: 24px;">· 배송비</li>
+						<li>· 거래지역</li>
+					</ul>
+
+					<ul class="status_detail">
+						<c:choose>
+                        	<c:when test="${list.item_isUsed == true }">
+                        		<li>중고</li>
+                        	</c:when>
+                        	<c:otherwise>
+                        		<li>새상품</li>
+                        	</c:otherwise>
+                     	</c:choose>
+						<c:choose>
+                        	<c:when test="${list.item_isExchange == true }">
+                        		<li>교환가능</li>
+                        	</c:when>
+                        	<c:otherwise>
+                        		<li>교환불가</li>
+                        	</c:otherwise>
+                     	</c:choose>
+						<c:choose>
+                        	<c:when test="${list.item_isDeliveryFree == true }">
+                        		<li style="color: #396afc">배송비없음</li>
+                        	</c:when>
+                        	<c:otherwise>
+                        		<li style="color: #396afc">${list.item_charge } 원</li>
+                        	</c:otherwise>
+                     	</c:choose>
+<!-- 						<li style="color: #396afc">배송비없음</li> -->
+						<li style="color: skyblue;">${list.item_region }</li>
+
+					</ul>
+
+				</div>
+
+				<div class="btn_area">
+ 				  <div class="btn">
+                  <button class="btn1">
+                     <c:choose>
+                        <c:when test="${isLike == 'like' }">
+                           <img src="resources/images/redheart.svg" id="likesImg">
+                        </c:when>
+                        <c:otherwise>
+                           <img src="resources/images/whiteheart.svg" id="likesImg">
+                        </c:otherwise>
+                     </c:choose>
+                     &nbsp; <span>찜</span> <span id="likesCount2">${likesCount}</span>
+                  </button>
+               </div>
+				
+					
+					
+					<!-- 찜버튼끝        redheart.svg -->
+					
+					<button class="btn2">연락하기</button>
+					<button class="btn3" id="order">바로구매</button>
+<%--                      onclick="document.location.href='order?item_idx=${list.item_idx}';">바로구매</button> --%>
+
+				</div><!-- btn_area -->
+					
+			</article>
+
+		</div>
+
+	</section>
+
+	<section id="sec2">
+		<div id="wrap">
+			<h2>연관상품</h2>
+			<article class="simillar">
+			<c:forEach var="rList" items="${rList }" >
+				<div class="si_product">
+					<a href="itemDetail?item_idx=${rList.item_idx }">
+						<div class="img_area2">
+<!-- 							<img src="resources/images/streetinyoung.jpg" width="155" height="155"> -->
+							<img src="resources/itemUpload/${rList.item_img}.JPG" width="155" height="155">
+						</div>
+
+						<div class="txt_area2">${rList.item_subject }</div>
+					</a>
+				</div>
+			</c:forEach>
+				
+
+
+			</article>
+
+		</div>
+
+	</section>
+
+
+	<section id="sec3">
+		<div id="wrap">
+
+			<div class="left_area">
+				<div class="l1">
+					<p class="info">상품정보</p>
+
+					<p class="info_content">
+<%-- 					<pre><c:out value="${list.item_detail}" /></pre> --%>
+<%-- 						${list.item_detail } --%>
+						${fn:replace(list.item_detail, crcn, br)}
+
+
+					</p>
+
+					<ul class="categoryand">
+						<li><p>
+								<img src="resources/images/category2.svg"><span>카테고리</span>
+							</p>
+							<p class="p2">${list.category_name } ></p></li>
+
+						<li><p>
+								<img src="resources/images/tag.svg"><span>상품태그</span>
+							</p>
+							<p class="p2">
+							<c:forEach var="tagNames" items="${tagNames}">
+								# ${tagNames}
+							</c:forEach>
+
+							</p></li>
+
+					</ul>
+
+					<p class="info2">상품문의</p>
+
+					<div class="replyform"><!-- replyform -->
+						<form action="" method="post" id="commentForm">
+							<textarea placeholder="상품문의 입력 (100글자 내외)" name="reply" style="resize:none;" id="reply"></textarea>
+							<input type="submit" value="등록" id="commentBtn">
+						</form>
+					</div>
+					<div class="replyArea">
+						<a href=""><img src="resources/images/symbol.svg" width="48"
+							height="48"></a>
+
+						<div class="replyText">
+							<div class="set">
+								<div class="txt1">시소알림센터</div>
+
+								<div class="txt1-2">0초전</div>
+							</div>
+
+							<div class="txt2">[공지글] 직거래는 사기 예방의 최선책.</div>
+
+
+						<div class="txt3">
+                        <div class="report">
+                           <img src="resources/images/siren.svg" width="14" height="14"><span
+                              class="report_txt">신고하기</span>
+                        </div>
+
+
+                     	</div>
+							
+
+						</div>
+
+					</div>
+						
+					<div class="replyContent">
+					
+					
+
+					<!-- 여기부터 댓글 있으면 반복하기 -->
+					<c:forEach items="${cList}" var="cList">
+					${cList.comment_idx	 }
+					<div class="replyArea">
+						<a href=""><img src="resources/images/symbol.svg" width="48"
+							height="48"></a>
+
+						<div class="replyText">
+							<div class="set">
+								<div class="txt1">${cList.member_nickname }</div>
+
+								<div class="txt1-2">${cList.comment_date_format}</div>
+							</div>
+
+							<div class="txt2">${cList.comment_content }</div>
+
+
+							<div class="txt3">
+                        		<div class="report">
+                           		<img src="resources/images/siren.svg" width="14" height="14"><span
+                              	class="report_txt">신고하기</span>
+                        		</div>
+
+<%--                         		<c:if test="${sessionScope.id eq cList.member_id }"> --%>
+                        		<div class="report" id="delComment${cList.comment_idx }" onclick="deleteComment('${cList.comment_idx}')">	
+                          		<img src="resources/images/trash-can.svg" width="14"
+                              	height="14"><span class="report_txt" >삭제하기</span>
+                        		</div>
+<%--                         		</c:if> --%>
+
+                     		</div>
+
+						</div>
+
+					</div>
+					</c:forEach>
+					</div>
+
+
+				</div>
+			</div>
+
+			</c:forEach>
+
+
+			<div class="right_area">
+				<div class="r1">
+					<div class="r_title">상점정보</div>
+
+				</div>
+				<c:forEach var="sList" items="${sList }">
+				
+				<div class="shop_area"><!-- d -->
+					<div class="shop_name">
+						<a class="mar"> <img src="resources/images/default_shop_img.svg"
+							width="48" height="48">
+						</a>
+
+						<div class="shop_info">
+							<a href="" class="shop_title">${sList.member_nickName }</a>
+						</div>
+						<div class="shop_text">
+							<a href="https://m.bunjang.co.kr/shop/11371999/products">상품 ${sList.shop_itemCount }개</a>
+						</div>
+
+
+					</div>
+
+
+					<div class="more">
+					<c:forEach var="pList" items="${pList }">
+					
+						<div class="more_img">
+							<a href="itemDetail?item_idx=${pList.item_idx }"><img src="resources/itemUpload/${pList.item_img }.JPG" width="120"
+								height="96">
+
+								<div class="more_img_txt">
+									<span>${pList.item_price} 원</span>
+								</div> </a>
+
+						</div>
+
+					</c:forEach>
+						
+						
+					</div>
+					<c:if test="${3 < sList.shop_itemCount}">
+					<div class="more_link">
+						<a href="#" class="link_txt"> <span class="sig-color"
+							style="margin-right: 2px; margin-top: 5px;">${sList.shop_itemCount - 3 }개 </span>상품 더보기 >
+						</a>
+					</div>
+					</c:if>
+
+					<div class="review_area">
+						<div class="rev_title">
+							상점후기 <span class="sig-color">${sList.shop_reviewCount }</span>
+						</div>
+
+						<div class="rev_content">
+							
+							<c:forEach var="reviewList" items="${reviewList }">
+							
+							<div class="rev_box">
+								<a class="rev_img" href=""> <img
+									src="resources/images/default_shop_img.svg" width="32" height="32">
+								</a>
+
+								<div class="rev_txt">
+									<div class="rvtxt1">
+										<a href="" class="goshop">${reviewList.shopReview_nickname }</a>
+
+										<div class="rev_date">${reviewList.shopReview_date_format }</div>
+
+
+									</div>
+
+									<div class="rvtxt2">
+										<div class="star_box">
+											<c:forEach begin="1" end="${reviewList.shopReview_star }" step="1">
+												<img src="resources/images/star.svg" width="15" height="14">
+											</c:forEach>
+										</div>
+
+									</div>
+
+									<div class="rvtxt3">${reviewList.shopReview_content }</div>
+
+								</div>
+
+							</div>
+							
+							</c:forEach>
+							<!-- 리뷰1개 -->
+
+<!-- 							<div class="rev_box"> -->
+<!-- 								<a class="rev_img" href=""> <img -->
+<!-- 									src="resources/images/default_shop_img.svg" width="32" height="32"> -->
+<!-- 								</a> -->
+
+<!-- 								<div class="rev_txt"> -->
+<!-- 									<div class="rvtxt1"> -->
+<!-- 										<a href="" class="goshop">황선혜</a> -->
+
+<!-- 										<div class="rev_date">2초 전</div> -->
+
+
+<!-- 									</div> -->
+
+<!-- 									<div class="rvtxt2"> -->
+<!-- 										<div class="star_box"> -->
+
+<!-- 											<img src="resources/images/star.svg" width="15" height="14"> -->
+
+<!-- 										</div> -->
+
+<!-- 									</div> -->
+
+<!-- 									<div class="rvtxt3">왜 사기치세요 ??</div> -->
+
+<!-- 								</div> -->
+
+<!-- 							</div> -->
+							<!-- 리뷰1개 -->
+
+				
+
+						</div>
+						<div class="rev_link">
+
+						<c:choose>
+						<c:when test="${sList.shop_reviewCount ne 0 }">
+						
+							<a href="">상점후기 더보기 ></a>
+						
+						</c:when>
+						<c:otherwise>
+							<a href="">등록된 후기가 없습니다.</a>
+						</c:otherwise>
+						</c:choose>
+						</div>
+
+
+
+					</div>
+
+
+				</div>
+				</c:forEach>
+			</div>
+
+		</div>
+
+
+	</section>
+
+	<footer id="footer">
+
+		<div id="wrap">
+			<div class="copy">
+				<p>
+					ⓒ2021 Team <span class="sig-color">SYSO</span>
+				</p>
+				<p>Designed by Kys</p>
+			</div>
+		</div>
+	</footer>
+
+
+</body>
+</html>
+

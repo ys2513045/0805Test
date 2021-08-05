@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.itwillbs.itemMapper">
+
+<select id="getItem" resultType="com.itwillbs.domain.ItemVO">
+select item_subject, item_price, item_date from item order by item_date desc limit 0, 8
+</select>
+
+<select id="infinite" resultType="com.itwillbs.domain.ItemVO">
+<![CDATA[
+select item_idx, item_subject, item_price, item_date from item order by item_date desc limit #{startNum}, #{endNum}
+]]>
+</select>
+
+
+<insert id="join" parameterType="com.itwillbs.domain.MemberVO">
+insert into member(member_id, member_password, member_name, member_nickname, member_email, member_zipcode, member_address, member_addressDetail, member_phone, member_authStatus, member_authKey)
+values(
+#{member_id},
+#{member_password},
+#{member_name},
+#{member_nickname},
+#{member_email},
+#{member_zipcode},
+#{member_address},
+#{member_addressDetail},
+#{member_phone},
+0,
+null
+)
+
+</insert>
+
+<select id="getItemDetail" resultType="com.itwillbs.domain.ItemVO">
+select * from item where item_idx = #{item_idx}
+
+</select>
+
+<update id="authkey" parameterType="com.itwillbs.domain.MemberVO">
+update member set member_authKey = #{member_authKey} where member_id = #{member_id}
+</update>
+
+<update id="authstatus" parameterType="com.itwillbs.domain.MemberVO">
+update member set member_authStatus = #{member_authStatus} where member_id = #{member_id}
+</update>
+
+<select id="checkdup" parameterType="String">
+select * from member where member_id = #{member_id}
+</select>
+
+<select id="userCheck" resultType="com.itwillbs.domain.MemberVO">
+	select * from member where member_id = #{member_id} and member_password = #{member_password}
+</select>
+
+<update id="increaseLikesCount" parameterType="com.itwillbs.domain.ItemVO">
+	update item SET item_likesCount = item_likesCount + 1 where item_idx = #{item_idx}
+</update>
+
+<update id="decreaseLikesCount" parameterType="com.itwillbs.domain.ItemVO">
+	UPDATE item SET item_likesCount = item_likesCount - 1 WHERE item_idx = #{item_idx}
+</update>
+
+<update id="increaseReadCount">
+	UPDATE item SET item_readcount = item_readcount + 1 WHERE item_idx = #{item_idx}
+</update>
+
+<select id="getCategoryName" resultType="java.lang.String">
+	SELECT category_name FROM category WHERE category_idx = #{category_idx}
+</select>
+
+<select id="getTagNames" resultType="java.lang.String">
+	SELECT hashtag_name FROM hashtag WHERE item_idx = #{item_idx}
+</select>
+
+<select id="getRelatedItem" parameterType="com.itwillbs.domain.ItemVO" resultType="com.itwillbs.domain.ItemVO">
+	SELECT item_img, item_idx, item_subject FROM item WHERE item_idx != #{item_idx} AND category_idx = #{category_idx} ORDER BY RAND() LIMIT 6
+</select>
+
+<select id="getShopItemPhoto" resultType="com.itwillbs.domain.ItemVO">
+	SELECT item_img, item_idx, item_price FROM item WHERE item_idx != #{item_idx} AND member_id = #{member_id} ORDER BY RAND() LIMIT 2
+</select>
+
+</mapper>
+
+
+
+
+
+
+
+
+

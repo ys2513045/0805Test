@@ -1,0 +1,28 @@
+<!-- <?xml version="1.0" encoding="UTF-8"?> -->
+<!-- <!DOCTYPE mapper -->
+<!-- PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" -->
+<!-- "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> -->
+
+<!-- <mapper namespace="com.itwillbs.likesMapper"> -->
+	
+<!-- 	<select id="likesCount" resultType="int" parameterType="com.itwillbs.domain.likesVO"> -->
+<!-- 		select count(*) from likes where item_idx = #{item_idx} -->
+<!-- 	</select> -->
+	
+<!-- 	<select id="memberLikes" resultType="int"> -->
+<!-- 		select item_idx from likes where member_id=#{member_id} -->
+<!-- 	</select> -->
+	
+<!-- 	<select id="myLike" resultType="boolean"> -->
+<!-- 		select count(*) from likes where item_idx=#{item_idx} and member_id=#{member_id} -->
+<!-- 	</select> -->
+	
+<!-- 	<insert id="insertLike"> -->
+<!-- 		insert into likes values(#{item_idx}, #{member_id}) -->
+<!-- 	</insert> -->
+	
+<!-- 	<delete id="deleteLike"> -->
+<!-- 		delete from likes where item_idx=#{item_idx} and member_id=#{member_id} -->
+<!-- 	</delete> -->
+
+<!-- </mapper> -->
