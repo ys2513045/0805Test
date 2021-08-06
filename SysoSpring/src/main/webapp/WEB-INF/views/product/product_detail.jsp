@@ -38,7 +38,47 @@
 	z-index: 999999999;
 }
 
+
+#popup2 {
+	display: none; /*숨기기*/
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.5);
+	left: 0;
+	top: 0;
+	z-index: 999999999;
+}
+
 #popmenu {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: 600px;
+	height: 500px;
+	padding: 60px;
+	text-align: center;
+	background: #fff;
+	border-radius: 20px;
+	box-shadow: 0 2px 8px rgb(0 0 0/ 20%), 0 8px 20px rgb(0 0 0/ 20%);
+}
+
+#popmenu2 {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: 600px;
+	height: 500px;
+	padding: 60px;
+	text-align: center;
+	background: #fff;
+	border-radius: 20px;
+	box-shadow: 0 2px 8px rgb(0 0 0/ 20%), 0 8px 20px rgb(0 0 0/ 20%);
+}
+
+[class* = popup2_]{
 	position: absolute;
 	left: 50%;
 	top: 50%;
@@ -59,7 +99,22 @@
 	align-items: flex-start;
 }
 
+.pop_cont2 {
+	display: flex;
+	-webkit-box-pack: justify;
+	justify-content: space-between;
+	align-items: flex-start;
+}
+
 .pop_title {
+	letter-spacing: 5.2px;
+	font-size: 26px;
+	padding-bottom: 20px;
+	border-bottom: 1px solid #396afc;
+	margin-bottom: 30px;
+}
+
+.pop_title2 {
 	letter-spacing: 5.2px;
 	font-size: 26px;
 	padding-bottom: 20px;
@@ -73,7 +128,21 @@
 	border: none;
 }
 
+.pop_cont2 button {
+	background: none;
+	outline: none;
+	border: none;
+}
+
+
 #popmenu .textarea textarea {
+	width: 100%;
+	height: 300px;
+	resize: none;
+	font-sizle: 20px;
+}
+
+#popmenu2 .textarea textarea {
 	width: 100%;
 	height: 300px;
 	resize: none;
@@ -84,11 +153,24 @@
 	margin-bottom: 20px;
 }
 
+#popmenu2 .textarea {
+	margin-bottom: 20px;
+}
+
 placeholder:: {
 	font-size: 20px;
 }
 
 #popmenu .report_btn {
+	background: #396afc;
+	border: none;
+	padding: 10px 20px;
+	color: #fff;
+	cursor: pointer;
+	font-weight: bold;
+}
+
+#popmenu2 .report_btn2 {
 	background: #396afc;
 	border: none;
 	padding: 10px 20px;
@@ -112,7 +194,24 @@ $("#report").click(function(){
 $(".exit").click(function(){
     $("#popup").fadeOut();
 });   
+
+// $('.txt3 .report2').click(function(){
+// 	$('#popup2').fadeIn();
+// });
+
+$(".exit2").click(function(){
+    $("#popup2").fadeOut();
+});   
+
+
 });
+
+
+	
+
+	
+	
+
 
 $(document).ready(function () {
    
@@ -211,8 +310,8 @@ $(document).ready(function () {
                      if(rdata != ""){
                         $(rdata).each(function(){
                         console.log(this)
-                        str += "<div class=" + 'replyArea' + ">"
-                        + "<a href=" + "''" + ">" + "<img src=" + "'resources/images/default_shop_img.svg'" + "width=" + "'48'" +  "height=" + "'48'" + ">" + "</a>"
+                        str += "<div class=" + "'replyArea'" + ">"
+                        + "<a href=" + "''" + ">" + "<img src=" + "'resources/images/default_shop_img.svg'" + "width=" + "'45'" +  "height=" + "'45'" + ">" + "</a>"
                         + "<div class=" + "'replyText'" + ">"
                         + "<div class=" + "'set'" + ">"
                         + "<div class=" + "'txt1'" + ">" + this.member_nickname + "</div>"
@@ -220,9 +319,9 @@ $(document).ready(function () {
                         + "</div>"
                         + "<div class=" + "'txt2'" + ">" + this.comment_content + "</div>"
                         + "<div class=" + "'txt3'" + ">"
-                        + "<div class=" + "'report'" + ">"
+                        + "<div class=" + "'report2'" + "onclick=" + "'reportComment(" + this.comment_idx + ")'" + ">"
                         + "<img src=" + "'resources/images/siren.svg'" + "width=" + "'14'" + "height=" + "'14'" + ">"
-                        + "<span class=" + "'report_txt'" + ">" + "신고하기" + "</span>"
+                        + "<span class=" + "'report_txt2'" + ">" + "신고하기" + "</span>"
                         + "</div>"
                         + "<div class=" + "'report'" +  "id=" + "'delComment'" + "onclick=" + "'deleteComment(" + this.comment_idx + ")'" + ">"
                         + "<img src=" + "'resources/images/trash-can.svg'" + "width=" + "'14'" + "height=" + "'14'" + ">"
@@ -231,8 +330,27 @@ $(document).ready(function () {
                         + "<input type=" + "'hidden'" + "id=" + "'comment_idx" + this.comment_idx + "'   value=" + this.comment_idx + ">"
                         + "</div>"
                         + "</div>"
+                        + "<div id=" + "'popup2'" + "class=" + "'popup2_" + this.comment_idx + "'  >"
+                        + "<div id=" + "'popmenu2'" + ">"
+                        + "<div class=" + "'pop_cont2'" + ">"
+                        + "<div class=" + "'pop_title2'" + ">" + "신고하기" + "</div>"
+                        + "<button class=" + "'exit2'" +  "style=" + "'cursor: pointer;'" + "onclick=" + "'closeReportComment(" + this.comment_idx + ")'" + ">"
+                        + "<img src=" + "'resources/images/exit.svg'" + " width=" + "'24'" + " height=" + "'24'" + ">"
+                        + "</button>"
+                        + "</div>"
+                        + "<form action=" + "'report_comment'" + " method=" + "'post'" + ">"
+                        + "<div class=" + "'textarea'" + ">"
+                        + "<textarea placeholder=" + "'신고 내용을 직접 작성해주세요.자세하게 적어주시면 신고처리에 큰 도움이 됩니다.'"
+						+ "	required name=" + "'report_content'" + ">" + "</textarea>"
+						+ "<input type=" + "'hidden'" + " name=" + "'comment_idx'" + "id=" + this.comment_idx + " value=" + this.comment_idx + ">"
+						+ "</div>"
+						+ "<button type=" + "'submit'" + "class=" + "'report_btn2'" + ">" + "등록" + "</button>"
+						+ "</form>"
+						+ "</div>"
+						+ "</div>"
                         + "</div>"
                         + "</div>"
+                        
                         });
                         $(".replyContent").prepend(str);
                         
@@ -288,8 +406,8 @@ $(document).ready(function () {
                     if(rdata != ""){
                        $(rdata).each(function(){
                        console.log(this)
-                       str += "<div class=" + 'replyArea' + ">"
-                       + "<a href=" + "''" + ">" + "<img src=" + "'resources/images/default_shop_img.svg'" + "width=" + "'48'" +  "height=" + "'48'" + ">" + "</a>"
+                       str += "<div class=" + "'replyArea'" + ">"
+                       + "<a href=" + "''" + ">" + "<img src=" + "'resources/images/default_shop_img.svg'" + "width=" + "'45'" +  "height=" + "'45'" + ">" + "</a>"
                        + "<div class=" + "'replyText'" + ">"
                        + "<div class=" + "'set'" + ">"
                        + "<div class=" + "'txt1'" + ">" + this.member_nickname + "</div>"
@@ -297,9 +415,9 @@ $(document).ready(function () {
                        + "</div>"
                        + "<div class=" + "'txt2'" + ">" + this.comment_content + "</div>"
                        + "<div class=" + "'txt3'" + ">"
-                       + "<div class=" + "'report'" + ">"
+                       + "<div class=" + "'report2'" + "onclick=" + "'reportComment(" + this.comment_idx + ")'" + ">"
                        + "<img src=" + "'resources/images/siren.svg'" + "width=" + "'14'" + "height=" + "'14'" + ">"
-                       + "<span class=" + "'report_txt'" + ">" + "신고하기" + "</span>"
+                       + "<span class=" + "'report_txt2'" + ">" + "신고하기" + "</span>"
                        + "</div>"
                        + "<div class=" + "'report'" +  "id=" + "'delComment'" + "onclick=" + "'deleteComment(" + this.comment_idx + ")'" + ">"
                        + "<img src=" + "'resources/images/trash-can.svg'" + "width=" + "'14'" + "height=" + "'14'" + ">"
@@ -308,6 +426,24 @@ $(document).ready(function () {
                        + "<input type=" + "'hidden'" + "id=" + "'comment_idx" + this.comment_idx + "'   value=" + this.comment_idx + ">"
                        + "</div>"
                        + "</div>"
+                       + "<div id=" + "'popup2'" + "class=" + "'popup2_" + this.comment_idx + "'  >"
+                       + "<div id=" + "'popmenu2'" + ">"
+                       + "<div class=" + "'pop_cont2'" + ">"
+                       + "<div class=" + "'pop_title2'" + ">" + "신고하기" + "</div>"
+                       + "<button class=" + "'exit2'" +  "style=" + "'cursor: pointer;'" + "onclick=" + "'closeReportComment(" + this.comment_idx + ")'" + ">"
+                       + "<img src=" + "'resources/images/exit.svg'" + " width=" + "'24'" + " height=" + "'24'" + ">"
+                       + "</button>"
+                       + "</div>"
+                       + "<form action=" + "'report_comment'" + " method=" + "'post'" + ">"
+                       + "<div class=" + "'textarea'" + ">"
+                       + "<textarea placeholder=" + "'신고 내용을 직접 작성해주세요.자세하게 적어주시면 신고처리에 큰 도움이 됩니다.'"
+						+ "	required name=" + "'report_content'" + ">" + "</textarea>"
+						+ "<input type=" + "'hidden'" + " name=" + "'comment_idx'" + "id=" + this.comment_idx + " value=" + this.comment_idx + ">"
+						+ "</div>"
+						+ "<button type=" + "'submit'" + "class=" + "'report_btn2'" + ">" + "등록" + "</button>"
+						+ "</form>"
+						+ "</div>"
+						+ "</div>"
                        + "</div>"
                        + "</div>"
                        });
@@ -345,7 +481,39 @@ $(document).ready(function () {
 				location.href="order?item_idx=" + "" + item_idx + "";
 			}
 		});
+		
+		
+		
+		
+		
+		
+		 	
+		
 	});
+	
+	// 댓글 신고 창 띄우기
+	function reportComment(comment_idx){
+		
+		var member_id = '<%=(String) session.getAttribute("id")%>';
+		
+		if(member_id == "null"){
+			alert('돌아가세요');
+			return false;
+		}
+		
+		alert(comment_idx);
+		$(".popup2_" + comment_idx).fadeIn();
+	}
+	
+	// 댓글 신고 창 닫기
+	function closeReportComment(comment_idx){
+		alert(comment_idx);
+		$(".popup2_" + comment_idx).fadeOut();
+	}
+
+	
+	
+	
 
 
 </script>
@@ -708,9 +876,9 @@ $(document).ready(function () {
 
 
 									<div class="txt3">
-										<div class="report">
+										<div class="report2" onclick="reportComment('${cList.comment_idx}')">
 											<img src="resources/images/siren.svg" width="14" height="14"><span
-												class="report_txt">신고하기</span>
+												class="report_txt2">신고하기</span>
 										</div>
 										
 										<div class="report" id="delComment" onclick="deleteComment('${cList.comment_idx}')">
@@ -720,6 +888,27 @@ $(document).ready(function () {
                                   			<input type="hidden" id="comment_idx${cList.comment_idx }" value="${cList.comment_idx }">
                                 		</div>
 										
+									</div>
+									<div id="popup2" class="popup2_${cList.comment_idx}">
+										<div id="popmenu2">
+											<div class="pop_cont2">
+												<div class="pop_title2">신고하기</div>
+												<button class="exit2" style="cursor: pointer;" onclick="closeReportComment('${cList.comment_idx}')">
+													<img src="resources/images/exit.svg" width="24" height="24">
+												</button>
+											</div>
+											<form action="report_comment" method="post">
+												<div class="textarea">
+													<textarea
+														placeholder="신고 내용을 직접 작성해주세요.자세하게 적어주시면 신고처리에 큰 도움이 됩니다."
+														required name="report_content"></textarea>
+														<input type="hidden" name="comment_idx" id="${cList.comment_idx }" value="${cList.comment_idx}">
+										
+												</div>
+
+												<button type="submit" class="report_btn2">등록</button>
+											</form>
+										</div>
 									</div>
 									
 									
@@ -771,7 +960,6 @@ $(document).ready(function () {
 					
 						<div class="more_img">
 							<a href="itemDetail?item_idx=${pList.item_idx }"><img src="resources/itemUpload/${pList.item_img }" width="120" height="96">
-<%-- 								<img src="resources/itemUpload/${pList.item_img }" width="120" height="96"> --%>
 								<div class="more_img_txt">
 									<span>${pList.item_price} 원</span>
 								</div> </a>

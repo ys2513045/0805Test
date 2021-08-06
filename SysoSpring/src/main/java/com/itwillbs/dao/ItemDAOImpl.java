@@ -8,7 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import com.itwillbs.domain.ItemVO;
-import com.itwillbs.domain.ShopVO;
+import com.itwillbs.domain.ReportVO;
 import com.itwillbs.domain.likesVO;
 
 @Repository
@@ -16,6 +16,7 @@ public class ItemDAOImpl implements ItemDAO {
 	
 	private static final String namespace ="com.itwillbs.itemMapper";
 	private static final String namespace2 = "com.itwillbs.likesMapper";
+	private static final String namespace3 = "com.itwillbs.CommentMapper";
 	
 	@Inject
 	private SqlSession sqlSession;
@@ -113,6 +114,18 @@ public class ItemDAOImpl implements ItemDAO {
 	public List<ItemVO> getShopItemPhoto(ItemVO ivo) {
 		// TODO Auto-generated method stub
 		return sqlSession.selectList(namespace + ".getShopItemPhoto", ivo);
+	}
+
+	@Override
+	public void insertItemReport(ReportVO rvo) {
+		// TODO Auto-generated method stub
+		sqlSession.insert(namespace + ".insertItemReport", rvo);
+	}
+
+	@Override
+	public void insertCommentReport(ReportVO rvo) {
+		// TODO Auto-generated method stub
+		sqlSession.insert(namespace3 + ".insertCommentReport", rvo);
 	}
 
 

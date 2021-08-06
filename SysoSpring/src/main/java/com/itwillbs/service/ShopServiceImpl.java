@@ -6,7 +6,6 @@ import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
 
-import com.itwillbs.dao.ItemDAO;
 import com.itwillbs.dao.MemberDAO;
 import com.itwillbs.dao.ShopDAO;
 import com.itwillbs.dao.ShopReviewDAO;

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.itwillbs.dao.ItemDAO;
 import com.itwillbs.domain.ItemVO;
+import com.itwillbs.domain.ReportVO;
 import com.itwillbs.domain.likesVO;
 import com.itwillbs.util.TimeGap;
 
@@ -206,6 +207,18 @@ public class ItemServiceImpl implements ItemService {
 		
 		
 		return list;
+	}
+
+	@Override
+	public void insertItemReport(ReportVO rvo) {
+		// TODO Auto-generated method stub
+		dao.insertItemReport(rvo);
+	}
+
+	@Override
+	public void insertCommentReport(ReportVO rvo) {
+		// TODO Auto-generated method stub
+		dao.insertCommentReport(rvo);
 	}
 
 }

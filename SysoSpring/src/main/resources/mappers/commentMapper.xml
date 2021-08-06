@@ -26,6 +26,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	DELETE FROM comment WHERE comment_idx = #{comment_idx}
 </delete>
 
+<insert id="insertCommentReport">
+	INSERT INTO report values(null, #{member_id}, #{report_content}, null, #{comment_idx}, null, null, 0, now())
+</insert>
 
 
 </mapper>

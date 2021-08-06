@@ -363,6 +363,17 @@ textarea::placeholder{
     position: relative;
     cursor: pointer;
 }
+
+.replyText .report2{
+        color: rgb(136, 136, 136);
+    font-size: 13px;
+    display: flex;
+    -webkit-box-align: unset;
+    align-items: unset;
+    margin-right: 25px;
+    position: relative;
+    cursor: pointer;
+}
 .replyText .report_txt{
     margin-left: 2px;
     color: #aaa;

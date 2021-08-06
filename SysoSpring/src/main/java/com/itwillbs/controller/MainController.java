@@ -28,15 +28,15 @@ public class MainController {
 	private ItemService service;
 	
 	
-//	@RequestMapping(value = "/", method = RequestMethod.GET)
-//	public String main(Model model) throws Exception {
-//		System.out.println("MainController /");
-//		List<ItemVO> list = service.getItem();
-//		
-//		model.addAttribute("list", list);
-//		
-//		return "./index";
-//	}
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String main(Model model) throws Exception {
+		System.out.println("MainController /");
+		List<ItemVO> list = service.getItem();
+		
+		model.addAttribute("list", list);
+		
+		return "./index";
+	}
 
 	@RequestMapping(value = "/home", method = RequestMethod.GET)
 	public String home(Model model) throws Exception {

@@ -84,6 +84,10 @@ select * from member where member_id = #{member_id}
 	SELECT item_img, item_idx, item_price FROM item WHERE item_idx != #{item_idx} AND member_id = #{member_id} ORDER BY RAND() LIMIT 2
 </select>
 
+<insert id="insertItemReport" parameterType="com.itwillbs.domain.ReportVO">
+	INSERT INTO report values(null, #{member_id}, #{report_content}, null, null, #{item_idx}, null, 0, now()) 
+</insert>
+
 </mapper>
 
 

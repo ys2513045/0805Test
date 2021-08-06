@@ -3,6 +3,7 @@ package com.itwillbs.dao;
 import java.util.List;
 
 import com.itwillbs.domain.ItemVO;
+import com.itwillbs.domain.ReportVO;
 import com.itwillbs.domain.ShopVO;
 import com.itwillbs.domain.likesVO;
 
@@ -35,6 +36,10 @@ public interface ItemDAO {
 	public List<ItemVO> getRelatedItem(ItemVO ivo);
 
 	public List<ItemVO> getShopItemPhoto(ItemVO ivo);
+
+	public void insertItemReport(ReportVO rvo);
+
+	public void insertCommentReport(ReportVO rvo);
 
 
 	

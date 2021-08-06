@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.itwillbs.domain.CommentVO;
 import com.itwillbs.domain.ItemVO;
+import com.itwillbs.domain.ReportVO;
 import com.itwillbs.domain.ShopReviewVO;
 import com.itwillbs.domain.ShopVO;
 import com.itwillbs.domain.likesVO;
@@ -244,5 +245,43 @@ public class ItemController {
 
 			return cList;
 		}
+		
+		@RequestMapping(value = "/report_item", method = RequestMethod.POST)
+		public String report_item(@RequestParam int item_idx, @RequestParam String report_content, Model model, HttpSession session) {
+			
+			System.out.println(item_idx);
+			System.out.println(report_content);
+			
+			ReportVO rvo = new ReportVO();
+			rvo.setItem_idx(item_idx);
+			rvo.setMember_id((String)session.getAttribute("id"));
+			rvo.setReport_content(report_content);
+			
+			service.insertItemReport(rvo);
+			
+			model.addAttribute("msg", "신고해주셔서 감사합니다. 고객님의 신고는 모두가 즐겁게 이용할 수 있는 쾌적한 시소마켓을 만드는 데에 큰 도움이 됩니다.");
+			
+			return "./product/msg";
+		}
+		
+		
+		@RequestMapping(value = "/report_comment", method = RequestMethod.POST)
+		public String report_comment(@RequestParam int comment_idx, @RequestParam String report_content, Model model, HttpSession session) {
+			
+			System.out.println(comment_idx + ": comment_idx");
+			System.out.println(report_content);
+			
+			ReportVO rvo = new ReportVO();
+			rvo.setComment_idx(comment_idx);
+			rvo.setMember_id((String)session.getAttribute("id"));
+			rvo.setReport_content(report_content);
+			
+			service.insertCommentReport(rvo);
+			
+			model.addAttribute("msg", "신고해주셔서 감사합니다. 고객님의 신고는 모두가 즐겁게 이용할 수 있는 쾌적한 시소마켓을 만드는 데에 큰 도움이 됩니다.");
+			
+			return "./product/msg";
+		}
+		
 
 }

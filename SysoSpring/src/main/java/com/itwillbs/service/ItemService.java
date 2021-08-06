@@ -3,6 +3,7 @@ package com.itwillbs.service;
 import java.util.List;
 
 import com.itwillbs.domain.ItemVO;
+import com.itwillbs.domain.ReportVO;
 import com.itwillbs.domain.likesVO;
 
 public interface ItemService {
@@ -33,5 +34,9 @@ public interface ItemService {
 	public List<ItemVO> getRelatedItem(ItemVO ivo);
 
 	public List<ItemVO> getShopItemPhoto(ItemVO ivo);
+
+	public void insertItemReport(ReportVO rvo);
+
+	public void insertCommentReport(ReportVO rvo);
 
 }
